@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MovimentoDpJogador : MonoBehaviour
+public class Jogador : MonoBehaviour
 {
 
-    private Rigidbody2D rigidbory2D;
+    private Rigidbody2D rigidbody2D;
     private Animator objAnimator;
+
+    [Header("UI")]
+    [SerializeField] public JogadorOverlay jogadorOverlay;
 
     [Header("Movimentação")]
     public float velocidadeDoJogador;
@@ -19,17 +20,19 @@ public class MovimentoDpJogador : MonoBehaviour
     public Transform verificadorDeChao;
     public LayerMask camadaDoChao;
 
-    public float vidasDoJogador;
+    public int vidasDoJogador;
     public bool jogadorEstaVivo;
+    public int frutasColetadas;
 
     void Awake() {
-        rigidbory2D = GetComponent<Rigidbody2D>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
         objAnimator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
     void Start() {
         vidasDoJogador = 4;
+        frutasColetadas = 0;
         jogadorEstaVivo = true;
     }
 
@@ -52,7 +55,7 @@ public class MovimentoDpJogador : MonoBehaviour
         if(Input.GetButtonDown("Jump")) {
             if(jogadorEstaTocandoNoChao == true) {
                 SFXManager.referencia.somDoPulo.Play();
-                rigidbory2D.AddForce(new Vector2(0f, alturaDoPulo), ForceMode2D.Impulse);
+                rigidbody2D.AddForce(new Vector2(0f, alturaDoPulo), ForceMode2D.Impulse);
             }
         }
 
@@ -71,9 +74,9 @@ public class MovimentoDpJogador : MonoBehaviour
         float movimentoHorizontal = Input.GetAxis("Horizontal");
         float eixoX = movimentoHorizontal * velocidadeDoJogador;
 
-        float eixoY = rigidbory2D.velocity.y;
+        float eixoY = rigidbody2D.velocity.y;
 
-        rigidbory2D.velocity = new Vector2(eixoX, eixoY);
+        rigidbody2D.velocity = new Vector2(eixoX, eixoY);
 
         if(movimentoHorizontal > 0) {
             // Jogador para a direito
@@ -98,5 +101,18 @@ public class MovimentoDpJogador : MonoBehaviour
                 objAnimator.Play("jogador-andando");
             }
         }
+    }
+
+    public void MachucarJogador()
+    {
+        vidasDoJogador -= 1;
+        SFXManager.referencia.somDoDano.Play();
+        jogadorOverlay.SetTextoVidas(vidasDoJogador);
+    }
+
+    public void ColetouFruta()
+    {
+        frutasColetadas += 1;
+        jogadorOverlay.SetTextoFrutas(frutasColetadas);
     }
 }

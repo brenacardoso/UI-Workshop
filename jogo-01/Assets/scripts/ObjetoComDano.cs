@@ -8,7 +8,7 @@ public class ObjetoComDano : MonoBehaviour
     {
         if(outroObjeto.gameObject.CompareTag("Player")) {
             // Dizer que o jogador morreu ou perdeu vida
-            outroObjeto.gameObject.GetComponent<VidaDoJogador>().MachucarJogador();
+            outroObjeto.gameObject.GetComponent<Jogador>().MachucarJogador();
         }
     }
 }

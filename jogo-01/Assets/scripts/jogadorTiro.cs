@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class jogadorTiro : MonoBehaviour
+public class JogadorTiro : MonoBehaviour
 {
 
-    private Rigidbody2D rigidbory2D;
-    private Animator objAnimator;
+    private Rigidbody2D rigidBody;
 
     [Header("Movimentação")]
     public float velocidadeDoJogador;
@@ -26,8 +23,7 @@ public class jogadorTiro : MonoBehaviour
     public float quantidadeDeFlecha;
     
     void Awake() {
-        rigidbory2D = GetComponent<Rigidbody2D>();
-        objAnimator = GetComponent<Animator>();
+        rigidBody = GetComponent<Rigidbody2D>();
     }
 
     // Start is called before the first frame update
@@ -73,12 +69,8 @@ public class jogadorTiro : MonoBehaviour
 
         if(Input.GetButtonDown("Jump")) {
             if(jogadorEstaTocandoNoChao == true) {
-                rigidbory2D.AddForce(new Vector2(0f, alturaDoPulo), ForceMode2D.Impulse);
+                rigidBody.AddForce(new Vector2(0f, alturaDoPulo), ForceMode2D.Impulse);
             }
-        }
-
-        if(jogadorEstaTocandoNoChao == false) {
-            // objAnimator.Play("jogador-pulando");
         }
     }
 
@@ -92,9 +84,9 @@ public class jogadorTiro : MonoBehaviour
         float movimentoHorizontal = Input.GetAxis("Horizontal");
         float eixoX = movimentoHorizontal * velocidadeDoJogador;
 
-        float eixoY = rigidbory2D.velocity.y;
+        float eixoY = rigidBody.velocity.y;
 
-        rigidbory2D.velocity = new Vector2(eixoX, eixoY);
+        rigidBody.velocity = new Vector2(eixoX, eixoY);
 
         if(movimentoHorizontal > 0) {
             // Jogador para a direito
@@ -103,21 +95,6 @@ public class jogadorTiro : MonoBehaviour
         } else if(movimentoHorizontal < 0){
             // jogador para esquerda
             transform.localScale = new Vector3(-1f, 1f, 1f);
-        }
-
-        if(movimentoHorizontal == 0) {
-            // Rodar animação de parado
-            if(jogadorEstaTocandoNoChao == true) {
-                // objAnimator.Play("jogador-parado");
-            }
-        } else if(movimentoHorizontal != 0) {
-            // Podemos fazer multiplas validações usando o "&&"
-            // if(movimentoHorizontal != 0 && jogadorEstaTocandoNoChao == true) {
-
-            if(jogadorEstaTocandoNoChao == true) {
-                // Rodar a animação de andando
-                // objAnimator.Play("jogador-andando");
-            }
         }
     }
 }
